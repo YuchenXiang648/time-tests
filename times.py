@@ -12,12 +12,20 @@ def time_range(start_time, end_time, number_of_intervals=1, gap_between_interval
 
 
 def compute_overlap_time(range1, range2):
+    from datetime import datetime
+    fmt = "%Y-%m-%d %H:%M:%S"
     overlap_time = []
+
     for start1, end1 in range1:
         for start2, end2 in range2:
-            low = max(start1, start2)
-            high = min(end1, end2)
-            overlap_time.append((low, high))
+            s1 = datetime.strptime(start1, fmt)
+            e1 = datetime.strptime(end1, fmt)
+            s2 = datetime.strptime(start2, fmt)
+            e2 = datetime.strptime(end2, fmt)
+            low = max(s1, s2)
+            high = min(e1, e2)
+            if low < high:
+                overlap_time.append((low.strftime(fmt), high.strftime(fmt)))
     return overlap_time
 
 if __name__ == "__main__":

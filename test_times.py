@@ -35,3 +35,32 @@ def test_compute_overlap_time():
     assert isinstance(overlap, list)
     assert all(len(x) == 2 for x in overlap)
     assert overlap[0][0] >= "2010-01-12 10:30:00"
+
+
+def test_no_overlap():
+    """Two time ranges that do not overlap."""
+    range1 = times.time_range("2010-01-12 10:00:00", "2010-01-12 11:00:00")
+    range2 = times.time_range("2010-01-12 11:00:00", "2010-01-12 12:00:00")
+    overlap = times.compute_overlap_time(range1, range2)
+    for start, end in overlap:
+        assert start == end, f"Expected no overlap, but got {start} to {end}"
+
+
+def test_multiple_intervals_overlap():
+    """Two ranges that both contain several intervals each."""
+    range1 = times.time_range("2010-01-12 10:00:00", "2010-01-12 11:00:00", 2)
+    range2 = times.time_range("2010-01-12 10:30:00", "2010-01-12 11:30:00", 2)
+    overlap = times.compute_overlap_time(range1, range2)
+    for start, end in overlap:
+        assert start <= end, "Overlap start is after end"
+    assert any(start != end for start, end in overlap), "Expected at least one non-zero overlap"
+
+
+def test_end_equals_start():
+    """Two time ranges that end exactly when the other starts."""
+    range1 = times.time_range("2010-01-12 09:00:00", "2010-01-12 10:00:00")
+    range2 = times.time_range("2010-01-12 10:00:00", "2010-01-12 11:00:00")
+    overlap = times.compute_overlap_time(range1, range2)
+
+    for start, end in overlap:
+        assert start == end, f"Expected exact boundary overlap, but got {start} to {end}"
