@@ -1,6 +1,5 @@
 import datetime
 
-
 def time_range(start_time, end_time, number_of_intervals=1, gap_between_intervals_s=0):
     start_time_s = datetime.datetime.strptime(start_time, "%Y-%m-%d %H:%M:%S")
     end_time_s = datetime.datetime.strptime(end_time, "%Y-%m-%d %H:%M:%S")
@@ -10,7 +9,9 @@ def time_range(start_time, end_time, number_of_intervals=1, gap_between_interval
                  for i in range(number_of_intervals)]
     return [(ta.strftime("%Y-%m-%d %H:%M:%S"), tb.strftime("%Y-%m-%d %H:%M:%S")) for ta, tb in sec_range]
 
+_FMT = "%Y-%m-%d %H:%M:%S"
 
+<<<<<<< HEAD
 def compute_overlap_time(range1, range2):
     from datetime import datetime
     fmt = "%Y-%m-%d %H:%M:%S"
@@ -27,6 +28,20 @@ def compute_overlap_time(range1, range2):
             if low < high:
                 overlap_time.append((low.strftime(fmt), high.strftime(fmt)))
     return overlap_time
+=======
+def compute_overlap_time(a, b):
+    A = [(datetime.datetime.strptime(s, _FMT), datetime.datetime.strptime(e, _FMT)) for s, e in a]
+    B = [(datetime.datetime.strptime(s, _FMT), datetime.datetime.strptime(e, _FMT)) for s, e in b]
+    out = []
+    for s1, e1 in A:
+        for s2, e2 in B:
+            s = max(s1, s2)
+            e = min(e1, e2)
+            if s <= e:
+                out.append((s.strftime(_FMT), e.strftime(_FMT)))
+    out.sort()
+    return out
+>>>>>>> 6f9c7f2 (add tests and update compute_overlap_time (Answers UCL-COMP0233-25-26/RSE-Classwork#15))
 
 if __name__ == "__main__":
     large = time_range("2010-01-12 10:00:00", "2010-01-12 12:00:00")
