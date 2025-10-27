@@ -56,3 +56,11 @@ def test_touching_endpoints_are_not_overlap():
     r2 = times.time_range("2010-01-12 10:30:00", "2010-01-12 11:00:00")
     overlap = times.compute_overlap_time(r1, r2)
     assert overlap == [("2010-01-12 10:30:00", "2010-01-12 10:30:00")]
+
+
+import pytest
+import times
+
+def test_time_range_backwards_raises():
+    with pytest.raises(ValueError, match="end_time is before start_time"):
+        times.time_range("2010-01-12 12:00:00", "2010-01-12 10:00:00")
