@@ -20,8 +20,14 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest
+          pip install pytest pytest-cov
 
-      - name: Test with pytest
+      - name: Test with coverage
         run: |
-          pytest -q
+          pytest --cov=. --cov-report=term-missing --cov-report=html
+
+      - name: Upload HTML coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html-python-${{ matrix.python-version }}
+          path: htmlcov
